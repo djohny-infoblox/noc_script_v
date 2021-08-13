@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: webserver
+  name: webserver
+spec:
+  selector:
+    matchLabels:
+      app: webserver
+  template:
+    metadata:
+      labels:
+        app: webserver
+    spec:
+        containers:
+        - name: webserverdsds
+          image: dhansoncj/webserver:latest
+          ports:
+            - containerPort: 80
+              name: http-webserver
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webserver
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: http-webserver
+      nodePort: 32324
+  selector:
+    app: webserver
+  sessionAffinity: None
+  type: NodePort
